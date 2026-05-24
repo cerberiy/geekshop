@@ -1,0 +1,19 @@
+{
+  "name": "geekshop",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "prettier-plugin-tailwindcss": "^0.6.0",
+    "turbo": "^2.1.0",
+    "typescript": "^5.5.0"
+  },
+  "workspaces": ["apps/*", "packages/*"],
+  "packageManager": "pnpm@9.0.0"
+}
