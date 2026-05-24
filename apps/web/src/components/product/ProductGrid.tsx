@@ -1,7 +1,7 @@
-import type { ShopifyProduct } from '@/lib/shopify/types'
+import type { CatalogProduct } from '@/lib/payload/types'
 import ProductCard from './ProductCard'
 
-export default function ProductGrid({ products }: { products: ShopifyProduct[] }) {
+export default function ProductGrid({ products }: { products: CatalogProduct[] }) {
   if (products.length === 0) {
     return <p className="py-12 text-center text-zinc-500">No products found.</p>
   }

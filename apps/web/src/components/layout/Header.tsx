@@ -1,24 +1,4 @@
-import { getCart } from '@/lib/shopify'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
-
-async function CartCount() {
-  const cookieStore = await cookies()
-  const cartId = cookieStore.get('cart_id')?.value
-  const cart = cartId ? await getCart(cartId) : null
-  const count = cart?.totalQuantity ?? 0
-
-  return (
-    <Link href="/cart" className="relative text-zinc-300 transition hover:text-white">
-      Cart
-      {count > 0 && (
-        <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-violet-600 text-xs font-bold text-white">
-          {count}
-        </span>
-      )}
-    </Link>
-  )
-}
 
 export default function Header() {
   return (
@@ -32,7 +12,6 @@ export default function Header() {
           <Link href="/products" className="text-zinc-300 transition hover:text-white">
             Products
           </Link>
-          <CartCount />
         </div>
       </nav>
     </header>

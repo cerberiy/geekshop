@@ -1,5 +1,5 @@
 import ProductGrid from '@/components/product/ProductGrid'
-import { getProducts } from '@/lib/shopify'
+import { getProducts } from '@/lib/payload'
 import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 }
 
 export default async function ProductsPage() {
-  const products = await getProducts({ first: 24 })
+  const products = await getProducts(24)
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12">

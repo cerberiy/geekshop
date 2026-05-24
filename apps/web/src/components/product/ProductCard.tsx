@@ -1,19 +1,21 @@
-import type { ShopifyProduct } from '@/lib/shopify/types'
+import type { CatalogMedia, CatalogProduct } from '@/lib/payload/types'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function ProductCard({ product }: { product: ShopifyProduct }) {
-  const image = product.images.edges[0]?.node
-  const price = product.priceRange.minVariantPrice
+export default function ProductCard({ product }: { product: CatalogProduct }) {
+  const firstImageEntry = product.images?.[0]
+  const image = firstImageEntry && typeof firstImageEntry.image !== 'string'
+    ? (firstImageEntry.image as CatalogMedia)
+    : null
 
   return (
-    <Link href={`/products/${product.handle}`} className="group">
+    <Link href={`/products/${product.slug}`} className="group">
       <div className="overflow-hidden rounded-xl bg-zinc-900 transition group-hover:bg-zinc-800">
         <div className="aspect-square overflow-hidden">
-          {image ? (
+          {image?.url ? (
             <Image
               src={image.url}
-              alt={image.altText ?? product.title}
+              alt={image.alt ?? product.title}
               width={600}
               height={600}
               className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
@@ -25,10 +27,9 @@ export default function ProductCard({ product }: { product: ShopifyProduct }) {
         <div className="p-4">
           <h3 className="truncate font-semibold text-white">{product.title}</h3>
           <p className="mt-1 text-sm text-violet-400">
-            {new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: price.currencyCode,
-            }).format(Number(price.amount))}
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+              product.price,
+            )}
           </p>
         </div>
       </div>

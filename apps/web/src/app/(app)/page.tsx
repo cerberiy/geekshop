@@ -1,10 +1,10 @@
 import ProductGrid from '@/components/product/ProductGrid'
-import { getProducts } from '@/lib/shopify'
+import { getProducts } from '@/lib/payload'
 
 export const dynamic = 'force-dynamic'
 
 export default async function HomePage() {
-  const products = await getProducts({ first: 8 })
+  const products = await getProducts(8)
 
   return (
     <div>
