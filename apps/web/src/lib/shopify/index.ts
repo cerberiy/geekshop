@@ -16,11 +16,14 @@ import type { GetProductsInput, ShopifyCart, ShopifyProduct } from './types'
 
 let _client: ReturnType<typeof createStorefrontApiClient> | null = null
 function getClient() {
+  if (!process.env.SHOPIFY_STORE_DOMAIN || !process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
+    return null
+  }
   if (!_client) {
     _client = createStorefrontApiClient({
-      storeDomain: process.env.SHOPIFY_STORE_DOMAIN!,
+      storeDomain: process.env.SHOPIFY_STORE_DOMAIN,
       apiVersion: '2025-01',
-      publicAccessToken: process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN!,
+      publicAccessToken: process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN,
     })
   }
   return _client
@@ -32,8 +35,10 @@ function edges<T>(connection: { edges: Edge<T>[] }): T[] {
 }
 
 export async function getProducts(input: GetProductsInput = {}): Promise<ShopifyProduct[]> {
+  const client = getClient()
+  if (!client) return []
   const { first = 12, query, sortKey, reverse } = input
-  const { data, errors } = await getClient().request(GET_PRODUCTS_QUERY, {
+  const { data, errors } = await client.request(GET_PRODUCTS_QUERY, {
     variables: { first, query, sortKey, reverse },
   })
   if (errors) throw new Error(errors.message)
@@ -41,7 +46,9 @@ export async function getProducts(input: GetProductsInput = {}): Promise<Shopify
 }
 
 export async function getProduct(handle: string): Promise<ShopifyProduct | null> {
-  const { data, errors } = await getClient().request(GET_PRODUCT_QUERY, {
+  const client = getClient()
+  if (!client) return null
+  const { data, errors } = await client.request(GET_PRODUCT_QUERY, {
     variables: { handle },
   })
   if (errors) throw new Error(errors.message)
@@ -52,7 +59,9 @@ export async function getCollectionProducts(
   handle: string,
   first = 12,
 ): Promise<ShopifyProduct[]> {
-  const { data, errors } = await getClient().request(GET_COLLECTION_PRODUCTS_QUERY, {
+  const client = getClient()
+  if (!client) return []
+  const { data, errors } = await client.request(GET_COLLECTION_PRODUCTS_QUERY, {
     variables: { handle, first },
   })
   if (errors) throw new Error(errors.message)
@@ -60,7 +69,9 @@ export async function getCollectionProducts(
 }
 
 export async function getCart(cartId: string): Promise<ShopifyCart | null> {
-  const { data, errors } = await getClient().request(GET_CART_QUERY, {
+  const client = getClient()
+  if (!client) return null
+  const { data, errors } = await client.request(GET_CART_QUERY, {
     variables: { cartId },
   })
   if (errors) throw new Error(errors.message)
@@ -68,7 +79,9 @@ export async function getCart(cartId: string): Promise<ShopifyCart | null> {
 }
 
 export async function createCart(variantId: string, quantity = 1): Promise<ShopifyCart> {
-  const { data, errors } = await getClient().request(CREATE_CART_MUTATION, {
+  const client = getClient()
+  if (!client) throw new Error('Shopify is not configured')
+  const { data, errors } = await client.request(CREATE_CART_MUTATION, {
     variables: { input: { lines: [{ merchandiseId: variantId, quantity }] } },
   })
   if (errors) throw new Error(errors.message)
@@ -80,7 +93,9 @@ export async function addToCart(
   variantId: string,
   quantity = 1,
 ): Promise<ShopifyCart> {
-  const { data, errors } = await getClient().request(ADD_TO_CART_MUTATION, {
+  const client = getClient()
+  if (!client) throw new Error('Shopify is not configured')
+  const { data, errors } = await client.request(ADD_TO_CART_MUTATION, {
     variables: { cartId, lines: [{ merchandiseId: variantId, quantity }] },
   })
   if (errors) throw new Error(errors.message)
@@ -92,7 +107,9 @@ export async function updateCartLine(
   lineId: string,
   quantity: number,
 ): Promise<ShopifyCart> {
-  const { data, errors } = await getClient().request(UPDATE_CART_MUTATION, {
+  const client = getClient()
+  if (!client) throw new Error('Shopify is not configured')
+  const { data, errors } = await client.request(UPDATE_CART_MUTATION, {
     variables: { cartId, lines: [{ id: lineId, quantity }] },
   })
   if (errors) throw new Error(errors.message)
@@ -100,7 +117,9 @@ export async function updateCartLine(
 }
 
 export async function removeFromCart(cartId: string, lineId: string): Promise<ShopifyCart> {
-  const { data, errors } = await getClient().request(REMOVE_FROM_CART_MUTATION, {
+  const client = getClient()
+  if (!client) throw new Error('Shopify is not configured')
+  const { data, errors } = await client.request(REMOVE_FROM_CART_MUTATION, {
     variables: { cartId, lineIds: [lineId] },
   })
   if (errors) throw new Error(errors.message)
