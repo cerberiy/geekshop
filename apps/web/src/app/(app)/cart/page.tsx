@@ -4,6 +4,7 @@ import { getCart } from '@/lib/shopify'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Cart' }
 
 export default async function CartPage() {

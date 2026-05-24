@@ -2,6 +2,7 @@ import ProductGrid from '@/components/product/ProductGrid'
 import { getProducts } from '@/lib/shopify'
 import type { Metadata } from 'next'
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'All Products',
   description: 'Browse all products in the store.',
