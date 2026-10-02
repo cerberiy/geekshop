@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "payload": "payload"
+    "payload": "payload",
+    "generate:importmap": "payload generate:importmap",
+    "migrate": "payload migrate",
+    "admin:create": "NODE_ENV=production node --env-file=.env.production.local --env-file=.env.admin.local node_modules/payload/bin.js run scripts/create-admin.ts"
   },
   "dependencies": {
     "@geekshop/ui": "workspace:*",
@@ -16,7 +19,7 @@
     "@payloadcms/next": "^3.0.0",
     "@payloadcms/richtext-lexical": "^3.0.0",
     "@payloadcms/storage-vercel-blob": "^3.0.0",
-"next": "^15.0.0",
+    "next": "15.4.11",
     "payload": "^3.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -29,8 +32,9 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "eslint": "^9.0.0",
-    "eslint-config-next": "^15.0.0",
+    "eslint-config-next": "15.4.11",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.5.0"
-  }
+  },
+  "type": "module"
 }
